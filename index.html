@@ -332,7 +332,16 @@
           <strong>${escapeHtml(student.name || 'New student')}</strong>
           <div class="student-actions">
             <button class="tiny-btn" data-action="save-student" data-team="${teamIndex}" data-student="${studentIndex}" data-unassigned="${unassigned}">Update</button>
+
             <button class="tiny-btn" data-action="reset-student" data-team="${teamIndex}" data-student="${studentIndex}" data-unassigned="${unassigned}">Cancel</button>
+
+      <button class="tiny-btn"
+        data-action="delete-student"
+        data-team="${teamIndex}"
+        data-student="${studentIndex}"
+        data-unassigned="${unassigned}">
+    Delete
+</button>
           </div>
         </div>
         <div class="fields">
@@ -490,7 +499,25 @@
         render();
         return;
       }
-      if (action === 'reset-student') {
+     if (action === 'delete-student') {
+    const teamIndex = Number(button.dataset.team);
+    const studentIndex = Number(button.dataset.student);
+    const isUnassigned = button.dataset.unassigned === 'true';
+
+    if (confirm('Are you sure you want to delete this student?')) {
+        if (isUnassigned) {
+            state.unassigned.splice(studentIndex, 1);
+        } else {
+            state.teams[teamIndex].students.splice(studentIndex, 1);
+        }
+
+        document.getElementById('save-state').textContent = 'Student deleted';
+        render();
+    }
+      return;
+}
+
+if (action === 'reset-student') {
         render();
       }
     });
