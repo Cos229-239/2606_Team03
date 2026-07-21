@@ -277,7 +277,10 @@
   wrap.className = 'team-card';
   wrap.innerHTML = `
     <div class="team-header">
-      <strong>${escapeHtml(team.label)}</strong>
+      <strong>
+  ${escapeHtml(team.label)}
+  (${team.students.length} ${team.students.length === 1 ? 'student' : 'students'})
+</strong>
       <div class="team-actions">
         <button class="tiny-btn" data-action="rename-team" data-team="${teamIndex}">Rename</button>
         <button class="tiny-btn" data-action="add-student" data-team="${teamIndex}">Add student</button>
