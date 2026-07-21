@@ -273,30 +273,31 @@
     }
 
     function renderTeam(team, teamIndex) {
-      const wrap = document.createElement('section');
-      wrap.className = 'team-card';
-      wrap.innerHTML = `
-        <div class="team-header">
-          <strong>${escapeHtml(team.label)}</strong>
-          <div class="team-actions">
-            <button class="tiny-btn" data-action="rename-team" data-team="${teamIndex}">Rename</button>
-            <button class="tiny-btn" data-action="add-student" data-team="${teamIndex}">Add student</button>
-          </div>
-        </div>
-        <div class="student-list"></div>
-      `;
-      const list = wrap.querySelector('.student-list');
-      team.students.forEach((student, studentIndex) => {
-        list.appendChild(renderStudentCard(student, teamIndex, studentIndex, false));
-      });
-      if (!team.students.length) {
-        const empty = document.createElement('p');
-        empty.className = 'note';
-        empty.textContent = 'No students in this team yet.';
-        list.appendChild(empty);
-      }
-      return wrap;
-    }
+  const wrap = document.createElement('section');
+  wrap.className = 'team-card';
+  wrap.innerHTML = `
+    <div class="team-header">
+      <strong>${escapeHtml(team.label)}</strong>
+      <div class="team-actions">
+        <button class="tiny-btn" data-action="rename-team" data-team="${teamIndex}">Rename</button>
+        <button class="tiny-btn" data-action="add-student" data-team="${teamIndex}">Add student</button>
+        <button class="tiny-btn" data-action="delete-team" data-team="${teamIndex}">Delete Team</button>
+      </div>
+    </div>
+    <div class="student-list"></div>
+  `;
+  const list = wrap.querySelector('.student-list');
+  team.students.forEach((student, studentIndex) => {
+    list.appendChild(renderStudentCard(student, teamIndex, studentIndex, false));
+  });
+  if (!team.students.length) {
+    const empty = document.createElement('p');
+    empty.className = 'note';
+    empty.textContent = 'No students in this team yet.';
+    list.appendChild(empty);
+  }
+  return wrap;
+}
 
     function renderUnassigned() {
       const wrap = document.createElement('section');
@@ -468,6 +469,24 @@
         }
         return;
       }
+      if (action === 'delete-team') {
+    const teamIndex = Number(button.dataset.team);
+    const team = state.teams[teamIndex];
+
+    if (team.students.length > 0) {
+        alert('You cannot delete a team that still has students.');
+        return;
+    }
+
+    if (confirm('Delete this team?')) {
+        state.teams.splice(teamIndex, 1);
+
+        document.getElementById('save-state').textContent = 'Team deleted';
+        render();
+    }
+
+    return;
+}
       if (action === 'add-student') {
         state.teams[Number(button.dataset.team)].students.push(studentTemplate({ name: 'New Student' }));
         render();
