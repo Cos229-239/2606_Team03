@@ -190,13 +190,17 @@
       <h1>Roster Editor V2 Prototype</h1>
       <p>This is a standalone test page for class setup. It edits a roster-like JSON model in the browser, supports team changes over time, and exports a `V2` roster shape we can later wire into SupaTewl and the reporting pipeline.</p>
       <div class="top-actions">
-        <div class="button-row">
-          <button class="btn-primary" id="load-sample">Load sample 2604</button>
-          <button class="btn-secondary" id="add-team">Add team</button>
-          <button class="btn-secondary" id="add-unassigned">Add unassigned student</button>
-          <button class="btn-secondary" id="download-json">Download V2 roster JSON</button>
-        </div>
-        <div class="status-chip" id="save-state">Prototype only · not wired to repo writes</div>
+          <div class="button-row">
+              <button class="btn-primary" id="load-sample">Load sample 2604</button>
+              <button class="btn-secondary" id="add-team">Add team</button>
+              <button class="btn-secondary" id="add-unassigned">Add unassigned student</button>
+              <button class="btn-secondary" id="download-json">Download V2 roster JSON</button>
+          </div>
+          <div style="margin-top:10px;">
+              <label>Search Students:</label>
+              <input type="text" id="student-search" placeholder="Type a student's name...">
+          </div>
+          <div class="status-chip" id="save-state">Prototype only · not wired to repo writes</div>
       </div>
     </section>
 
@@ -233,6 +237,8 @@
 
   <script>
     const SAMPLE_PATH = './roster-v2-sample.json';
+      const MAX_TEAM_SIZE = 6;
+
     const state = {
       cycle: '2604',
       teams: [],
@@ -262,24 +268,26 @@
       const count = state.teams.reduce((sum, team) => sum + team.students.length, 0) + state.unassigned.length;
       document.getElementById('meta-count').textContent = String(count);
       const root = document.getElementById('team-root');
+      const searchBox = document.getElementById('student-search');
+const searchText = searchBox ? searchBox.value.toLowerCase() : '';
       root.innerHTML = '';
 
       state.teams.forEach((team, teamIndex) => {
-        root.appendChild(renderTeam(team, teamIndex));
+        root.appendChild(renderTeam(team, teamIndex, searchText));
       });
 
       root.appendChild(renderUnassigned());
       updateExport();
     }
 
-    function renderTeam(team, teamIndex) {
+    function renderTeam(team, teamIndex, searchText) {
   const wrap = document.createElement('section');
   wrap.className = 'team-card';
   wrap.innerHTML = `
     <div class="team-header">
       <strong>
   ${escapeHtml(team.label)}
-  (${team.students.length} ${team.students.length === 1 ? 'student' : 'students'})
+  (${team.students.length}/${MAX_TEAM_SIZE} students)
 </strong>
       <div class="team-actions">
         <button class="tiny-btn" data-action="rename-team" data-team="${teamIndex}">Rename</button>
@@ -291,8 +299,13 @@
   `;
   const list = wrap.querySelector('.student-list');
   team.students.forEach((student, studentIndex) => {
+  if (
+    searchText === '' ||
+    (student.name || '').toLowerCase().includes(searchText)
+  ) {
     list.appendChild(renderStudentCard(student, teamIndex, studentIndex, false));
-  });
+  }
+});
   if (!team.students.length) {
     const empty = document.createElement('p');
     empty.className = 'note';
@@ -491,10 +504,17 @@
     return;
 }
       if (action === 'add-student') {
-        state.teams[Number(button.dataset.team)].students.push(studentTemplate({ name: 'New Student' }));
-        render();
+    const team = state.teams[Number(button.dataset.team)];
+
+    if (team.students.length >= MAX_TEAM_SIZE) {
+        alert(`This team already has ${MAX_TEAM_SIZE} students.`);
         return;
-      }
+    }
+
+    team.students.push(studentTemplate({ name: 'New Student' }));
+    render();
+    return;
+}
       if (action === 'save-student') {
         const teamIndex = Number(button.dataset.team);
         const studentIndex = Number(button.dataset.student);
@@ -548,6 +568,9 @@ if (action === 'reset-student') {
       state.teams = [teamTemplate('Team 01', []), teamTemplate('Team 02', [])];
       render();
     });
+      document.getElementById('student-search').addEventListener('input', () => {
+  render();
+});
   </script>
 </body>
 </html>
