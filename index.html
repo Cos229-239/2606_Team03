@@ -523,6 +523,17 @@ const searchText = searchBox ? searchBox.value.toLowerCase() : '';
         const original = collection[studentIndex];
         const card = button.closest('.student-card');
         const next = readCardData(card);
+
+      const duplicate = [...state.teams.flatMap(team => team.students), ...state.unassigned]
+    .find(student =>
+        student.id !== original.id &&
+        student.name.trim().toLowerCase() === next.name.trim().toLowerCase()
+    );
+
+if (duplicate) {
+    alert('A student with this name already exists.');
+    return;
+}
         const updated = { ...original, ...next };
         delete updated.teamTarget;
         collection[studentIndex] = updated;
