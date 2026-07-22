@@ -320,7 +320,9 @@ const searchText = searchBox ? searchBox.value.toLowerCase() : '';
       wrap.className = 'team-card';
       wrap.innerHTML = `
         <div class="team-header">
-          <strong>Unassigned</strong>
+          <strong>
+  Unassigned (${state.unassigned.length} ${state.unassigned.length === 1 ? 'student' : 'students'})
+</strong>
           <div class="team-actions">
             <button class="tiny-btn" data-action="add-student-unassigned">Add student</button>
           </div>
