@@ -481,10 +481,12 @@ const searchText = searchBox ? searchBox.value.toLowerCase() : '';
       if (action === 'rename-team') {
         const team = state.teams[Number(button.dataset.team)];
         const next = prompt('Rename team', team.label);
-        if (next) {
-          team.label = next.trim();
-          render();
-        }
+       if (next && next.trim() !== '') {
+    team.label = next.trim();
+    render();
+} else if (next !== null) {
+    alert('Please enter a team name.');
+}
         return;
       }
       if (action === 'delete-team') {
