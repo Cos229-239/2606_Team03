@@ -526,6 +526,11 @@ const searchText = searchBox ? searchBox.value.toLowerCase() : '';
         const card = button.closest('.student-card');
         const next = readCardData(card);
 
+      if (next.name.trim() === '') {
+    alert('Please enter a student name.');
+    return;
+}
+
       const duplicate = [...state.teams.flatMap(team => team.students), ...state.unassigned]
     .find(student =>
         student.id !== original.id &&
