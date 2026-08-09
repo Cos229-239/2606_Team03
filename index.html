@@ -558,6 +558,11 @@ if (duplicate) {
         collection[studentIndex] = updated;
 
         const moveTarget = next.teamTarget;
+
+      if (state.teams[targetIndex].students.length >= MAX_TEAM_SIZE) {
+    alert(`This team already has ${MAX_TEAM_SIZE} students.`);
+    return;
+}
         if (moveTarget === 'unassigned' && !isUnassigned) {
           const [moved] = state.teams[teamIndex].students.splice(studentIndex, 1);
           state.unassigned.push(moved);
