@@ -493,6 +493,7 @@ if (next && duplicate) {
 }
        if (next && next.trim() !== '') {
     team.label = next.trim();
+      document.getElementById('save-state').textContent = 'Team renamed';
     render();
 } else if (next !== null) {
     alert('Please enter a team name.');
