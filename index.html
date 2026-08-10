@@ -560,20 +560,22 @@ if (duplicate) {
 
         const moveTarget = next.teamTarget;
 
-      if (state.teams[targetIndex].students.length >= MAX_TEAM_SIZE) {
-    alert(`This team already has ${MAX_TEAM_SIZE} students.`);
-    return;
-}
+      
         if (moveTarget === 'unassigned' && !isUnassigned) {
           const [moved] = state.teams[teamIndex].students.splice(studentIndex, 1);
           state.unassigned.push(moved);
         } else if (moveTarget !== 'unassigned' && (isUnassigned || Number(moveTarget) !== teamIndex)) {
           const targetIndex = Number(moveTarget);
+
+      if (state.teams[targetIndex].students.length >= MAX_TEAM_SIZE) {
+    alert(`This team already has ${MAX_TEAM_SIZE} students.`);
+    return;
+}
           const source = isUnassigned ? state.unassigned : state.teams[teamIndex].students;
           const [moved] = source.splice(studentIndex, 1);
           state.teams[targetIndex].students.push(moved);
         }
-        document.getElementById('save-state').textContent = 'Updated locally in browser state';
+       document.getElementById('save-state').textContent = 'Student updated successfully';
         render();
         return;
       }
