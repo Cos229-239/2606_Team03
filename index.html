@@ -584,8 +584,13 @@ if (duplicate) {
     const studentIndex = Number(button.dataset.student);
     const isUnassigned = button.dataset.unassigned === 'true';
 
-    if (confirm('Are you sure you want to delete this student?')) {
-        if (isUnassigned) {
+      const student = isUnassigned
+    ? state.unassigned[studentIndex]
+    : state.teams[teamIndex].students[studentIndex];
+
+    if (confirm(`Are you sure you want to delete ${student.name}?`)) {
+       
+      if (isUnassigned) {
             state.unassigned.splice(studentIndex, 1);
         } else {
             state.teams[teamIndex].students.splice(studentIndex, 1);
