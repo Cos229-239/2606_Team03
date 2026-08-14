@@ -596,7 +596,7 @@ if (duplicate) {
             state.teams[teamIndex].students.splice(studentIndex, 1);
         }
 
-        document.getElementById('save-state').textContent = 'Student deleted';
+        document.getElementById('save-state').textContent = `${student.name} deleted`;
         render();
     }
       return;
