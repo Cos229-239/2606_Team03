@@ -505,7 +505,7 @@ if (next && duplicate) {
     const team = state.teams[teamIndex];
 
     if (team.students.length > 0) {
-        alert('You cannot delete a team that still has students.');
+       alert(`${team.label} cannot be deleted because it still has students.`);
         return;
     }
 
