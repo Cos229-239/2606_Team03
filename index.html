@@ -601,7 +601,12 @@ if (duplicate) {
             state.teams[teamIndex].students.splice(studentIndex, 1);
         }
 
-       document.getElementById('save-state').textContent = `Student ${student.name} was deleted successfully`;
+      const remainingCount = isUnassigned
+    ? state.unassigned.length
+    : state.teams[teamIndex].students.length;
+
+document.getElementById('save-state').textContent =
+    `Student ${student.name} was deleted successfully. ${remainingCount} student(s) remain.`;
         render();
     }
       return;
