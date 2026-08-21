@@ -504,6 +504,11 @@ if (next && duplicate) {
     const teamIndex = Number(button.dataset.team);
     const team = state.teams[teamIndex];
 
+      if (state.teams.length === 1) {
+    alert('You must keep at least one team.');
+    return;
+}
+
     if (team.students.length > 0) {
        alert(`${team.label} cannot be deleted because it still has students.`);
         return;
