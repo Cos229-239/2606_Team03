@@ -532,7 +532,8 @@ if (next && duplicate) {
     }
 
     team.students.push(studentTemplate({ name: 'New Student' }));
-    render();
+document.getElementById('save-state').textContent = `Student added to ${team.label}`;
+render();
     return;
 }
       if (action === 'save-student') {
